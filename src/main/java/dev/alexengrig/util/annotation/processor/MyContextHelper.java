@@ -17,6 +17,7 @@
 package dev.alexengrig.util.annotation.processor;
 
 import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.Modifier;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -95,7 +96,10 @@ class MyContextHelper implements ContextHelper {
 
     @Override
     public Set<MyMethod> getAllOverridableMethods(Context context) {
-        return ElementUtil.getNotPrivateInstanceMethods(context.getType())
+        return ElementUtil.getAllMethods(context.getType())
+                .filter(m -> !m.getModifiers().contains(Modifier.PRIVATE)
+                        && !m.getModifiers().contains(Modifier.STATIC)
+                        && !m.getModifiers().contains(Modifier.FINAL))
                 .map(MyMethod::from)
                 .filter(MyContextHelper::isNotObjectMethod)
                 .collect(Collectors.toSet());

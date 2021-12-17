@@ -18,7 +18,6 @@ package dev.alexengrig.util.annotation.processor;
 
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.util.Types;
@@ -50,12 +49,10 @@ final class ElementUtil {
         return type.getSimpleName().toString();
     }
 
-    static Stream<ExecutableElement> getNotPrivateInstanceMethods(TypeElement type) {
+    static Stream<ExecutableElement> getAllMethods(TypeElement type) {
         return type.getEnclosedElements().stream()
                 .filter(e -> ElementKind.METHOD.equals(e.getKind()))
-                .map(ExecutableElement.class::cast)
-                .filter(m -> !m.getModifiers().contains(Modifier.PRIVATE)
-                        && !m.getModifiers().contains(Modifier.STATIC));
+                .map(ExecutableElement.class::cast);
     }
 
     static Optional<TypeElement> getParentClass(Types typeUtils, TypeElement type) {
