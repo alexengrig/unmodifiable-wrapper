@@ -21,13 +21,18 @@ import dev.alexengrig.util.annotation.UnmodifiableWrapper;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
+import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 
 public final class UnmodifiableWrapperProcessor extends AbstractProcessor {
@@ -44,6 +49,29 @@ public final class UnmodifiableWrapperProcessor extends AbstractProcessor {
     UnmodifiableWrapperProcessor(ContextFactory contextFactory, SourceGenerator sourceGenerator) {
         this.contextFactory = contextFactory;
         this.sourceGenerator = sourceGenerator;
+    }
+
+    private boolean isTargetType(TypeElement type) {
+        if (type.getModifiers().contains(Modifier.FINAL)) {
+            warning("Cannot inherit from final class.", type);
+            return false;
+        } else if (type.getModifiers().contains(Modifier.ABSTRACT)) {
+            warning("Cannot work with abstract class.", type);
+            return false;
+        } else if (type.getNestingKind() != NestingKind.TOP_LEVEL) {
+            warning("Cannot work with not top-level class.", type);
+            return false;
+        }
+        return true;
+    }
+
+    private void warning(String message, TypeElement type) {
+        Optional<AnnotationMirror> optionalAnnotation = ElementUtil.getAnnotationMirror(ANNOTATION_CLASS, type);
+        if (optionalAnnotation.isPresent()) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, message, type, optionalAnnotation.get());
+        } else {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, message, type);
+        }
     }
 
     private void process(TypeElement typeElement) {
@@ -76,7 +104,10 @@ public final class UnmodifiableWrapperProcessor extends AbstractProcessor {
             return false;
         }
         for (Element annotatedElement : roundEnv.getElementsAnnotatedWith(ANNOTATION_CLASS)) {
-            process((TypeElement) annotatedElement);
+            TypeElement type = (TypeElement) annotatedElement;
+            if (isTargetType(type)) {
+                process(type);
+            }
         }
         return true;
     }

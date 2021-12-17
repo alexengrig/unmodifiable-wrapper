@@ -16,6 +16,7 @@
 
 package dev.alexengrig.util.annotation.processor;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -53,6 +54,14 @@ final class ElementUtil {
         return type.getEnclosedElements().stream()
                 .filter(e -> ElementKind.METHOD.equals(e.getKind()))
                 .map(ExecutableElement.class::cast);
+    }
+
+    static Optional<AnnotationMirror> getAnnotationMirror(Class<?> annotationType, TypeElement type) {
+        String annotationClassName = annotationType.getName();
+        return type.getAnnotationMirrors().stream()
+                .filter(a -> annotationClassName.equals(a.getAnnotationType().toString()))
+                .findFirst()
+                .map(AnnotationMirror.class::cast);
     }
 
     static Optional<TypeElement> getParentClass(Types typeUtils, TypeElement type) {
