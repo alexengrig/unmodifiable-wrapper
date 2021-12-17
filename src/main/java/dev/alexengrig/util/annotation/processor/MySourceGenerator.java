@@ -26,12 +26,12 @@ class MySourceGenerator implements SourceGenerator {
         context.getPackageName().ifPresent(packageName -> joiner.add("package " + packageName + ";\n"));
         String className = context.getWrapperSimpleClassName();
         String parentClassName = context.getDomainClassName();
-        String classAccessModifier = context.isWrapperClassPublic() ? "public" : "";
-        joiner.add(classAccessModifier + " class " + className + " extends " + parentClassName + " {");
+        String classAccessModifier = context.isWrapperClassPublic() ? "public " : "";
+        joiner.add(classAccessModifier + "class " + className + " extends " + parentClassName + " {");
         joiner.add("");
         joiner.add("    private final " + parentClassName + " delegate;");
         joiner.add("");
-        joiner.add("    " + classAccessModifier + " " + className + "(" + parentClassName + " delegate) {");
+        joiner.add("    " + classAccessModifier + className + "(" + parentClassName + " delegate) {");
         joiner.add("        this.delegate = java.util.Objects.requireNonNull(delegate, \"The delegate must not be null\");");
         joiner.add("    }");
         joiner.add("");
