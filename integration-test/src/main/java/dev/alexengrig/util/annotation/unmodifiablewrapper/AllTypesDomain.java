@@ -18,8 +18,6 @@ package dev.alexengrig.util.annotation.unmodifiablewrapper;
 
 import dev.alexengrig.util.annotation.UnmodifiableWrapper;
 
-import java.util.Objects;
-
 @UnmodifiableWrapper
 public class AllTypesDomain {
 
@@ -103,42 +101,6 @@ public class AllTypesDomain {
 
     public void setStringValue(String stringValue) {
         this.stringValue = stringValue;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AllTypesDomain that = (AllTypesDomain) o;
-        return booleanValue == that.booleanValue
-                && byteValue == that.byteValue
-                && shortValue == that.shortValue
-                && charValue == that.charValue
-                && intValue == that.intValue
-                && Float.compare(that.floatValue, floatValue) == 0
-                && Double.compare(that.doubleValue, doubleValue) == 0
-                && longValue == that.longValue
-                && Objects.equals(stringValue, that.stringValue);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(booleanValue, byteValue, shortValue, charValue, intValue, floatValue, doubleValue, longValue, stringValue);
-    }
-
-    @Override
-    public String toString() {
-        return "AllTypesDomain{" +
-                "booleanValue=" + booleanValue +
-                ", byteValue=" + byteValue +
-                ", shortValue=" + shortValue +
-                ", charValue=" + charValue +
-                ", intValue=" + intValue +
-                ", floatValue=" + floatValue +
-                ", doubleValue=" + doubleValue +
-                ", longValue=" + longValue +
-                ", stringValue='" + stringValue + '\'' +
-                '}';
     }
 
 }

@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AllTypesDomainTest {
@@ -84,30 +83,6 @@ class AllTypesDomainTest {
         assertUOEThrows(() -> wrapper.setDoubleValue(6), "doubleValue");
         assertUOEThrows(() -> wrapper.setLongValue(7), "longValue");
         assertUOEThrows(() -> wrapper.setStringValue("8"), "stringValue");
-    }
-
-    @Test
-    void testEquals() {
-        AllTypesDomain domain = new AllTypesDomain();
-        UnmodifiableAllTypesDomain wrapper = new UnmodifiableAllTypesDomain(domain);
-        assertEquals(wrapper, wrapper);
-        assertEquals(wrapper, new UnmodifiableAllTypesDomain(domain));
-        assertNotEquals(domain, wrapper);
-        assertNotEquals(wrapper, domain);
-    }
-
-    @Test
-    void testHashCode() {
-        AllTypesDomain domain = new AllTypesDomain();
-        UnmodifiableAllTypesDomain wrapper = new UnmodifiableAllTypesDomain(domain);
-        assertEquals(domain.hashCode(), wrapper.hashCode());
-    }
-
-    @Test
-    void testToString() {
-        AllTypesDomain domain = new AllTypesDomain();
-        UnmodifiableAllTypesDomain wrapper = new UnmodifiableAllTypesDomain(domain);
-        assertEquals(wrapper.getClass().getSimpleName() + "{" + domain + "}", wrapper.toString());
     }
 
 }
