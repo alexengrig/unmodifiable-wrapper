@@ -51,6 +51,19 @@ public final class UnmodifiableWrapperProcessor extends AbstractProcessor {
         this.sourceGenerator = sourceGenerator;
     }
 
+    private void warning(String message, TypeElement type) {
+        Optional<AnnotationMirror> optionalAnnotation = ElementUtil.getAnnotationMirror(ANNOTATION_CLASS, type);
+        if (optionalAnnotation.isPresent()) {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, message, type, optionalAnnotation.get());
+        } else {
+            processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, message, type);
+        }
+    }
+
+    private void note(String message) {
+        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, message);
+    }
+
     private boolean isTargetType(TypeElement type) {
         if (type.getModifiers().contains(Modifier.FINAL)) {
             warning("Cannot inherit from final class.", type);
@@ -65,20 +78,12 @@ public final class UnmodifiableWrapperProcessor extends AbstractProcessor {
         return true;
     }
 
-    private void warning(String message, TypeElement type) {
-        Optional<AnnotationMirror> optionalAnnotation = ElementUtil.getAnnotationMirror(ANNOTATION_CLASS, type);
-        if (optionalAnnotation.isPresent()) {
-            processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, message, type, optionalAnnotation.get());
-        } else {
-            processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, message, type);
-        }
-    }
-
-    private void process(TypeElement typeElement) {
-        Context context = contextFactory.createContext(processingEnv, typeElement);
+    private void process(TypeElement type) {
+        Context context = contextFactory.createContext(processingEnv, type);
         String source = sourceGenerator.generate(context);
         JavaFileObject file = createFile(context);
         writeSourceToFile(source, file);
+        note("Created unmodifiable wrapper - " + context.getWrapperClassName());
     }
 
     private JavaFileObject createFile(Context context) {
