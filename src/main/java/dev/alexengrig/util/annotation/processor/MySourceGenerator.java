@@ -67,7 +67,10 @@ class MySourceGenerator implements SourceGenerator {
         joiner.add("");
         joiner.add("    @java.lang.Override");
         joiner.add("    public boolean equals(Object o) {");
-        joiner.add("        return delegate.equals(o);");
+        joiner.add("        if (this == o) return true;");
+        joiner.add("        if (o == null || getClass() != o.getClass()) return false;");
+        joiner.add("        " + className + " that = (" + className + ") o;");
+        joiner.add("        return delegate.equals(that.delegate);");
         joiner.add("    }");
         joiner.add("");
         joiner.add("    @java.lang.Override");
@@ -77,7 +80,7 @@ class MySourceGenerator implements SourceGenerator {
         joiner.add("");
         joiner.add("    @java.lang.Override");
         joiner.add("    public String toString() {");
-        joiner.add("        return delegate.toString();");
+        joiner.add("        return \"" + className + "{\" + delegate + \"}\";");
         joiner.add("    }");
         joiner.add("");
         joiner.add("}");

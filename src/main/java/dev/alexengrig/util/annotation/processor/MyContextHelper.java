@@ -33,7 +33,26 @@ class MyContextHelper implements ContextHelper {
         this.environment = environment;
     }
 
-    static boolean isSetter(MyMethod method) {
+    static boolean isNotObjectMethod(MyMethod method) {
+        switch (method.getName()) {
+            case "equals":
+                return !"public".equals(method.getAccessModifier())
+                        || !"boolean".equals(method.getReturnType())
+                        || 1 != method.getNumberOfParameters();
+            case "hashCode":
+                return !"public".equals(method.getAccessModifier())
+                        || !"int".equals(method.getReturnType())
+                        || 0 != method.getNumberOfParameters();
+            case "toString":
+                return !"public".equals(method.getAccessModifier())
+                        || !"java.lang.String".equals(method.getReturnType())
+                        || 0 != method.getNumberOfParameters();
+            default:
+                return true;
+        }
+    }
+
+    static boolean isSetterMethod(MyMethod method) {
         boolean hasOnlyOneParameter = method.getNumberOfParameters() == 1;
         if (!hasOnlyOneParameter) {
             return false;
@@ -78,6 +97,7 @@ class MyContextHelper implements ContextHelper {
     public Set<MyMethod> getAllOverridableMethods(Context context) {
         return ElementUtil.getNotPrivateInstanceMethods(context.getType())
                 .map(MyMethod::from)
+                .filter(MyContextHelper::isNotObjectMethod)
                 .collect(Collectors.toSet());
     }
 
@@ -92,7 +112,7 @@ class MyContextHelper implements ContextHelper {
     @Override
     public Set<MyMethod> getModificationMethods(Context context) {
         return context.getAllOverridableMethods().stream()
-                .filter(MyContextHelper::isSetter)
+                .filter(MyContextHelper::isSetterMethod)
                 .collect(Collectors.toSet());
     }
 
