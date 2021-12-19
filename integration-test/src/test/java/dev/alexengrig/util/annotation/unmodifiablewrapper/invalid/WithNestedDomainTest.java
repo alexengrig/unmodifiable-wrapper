@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package dev.alexengrig.util.annotation.unmodifiablewrapper;
+package dev.alexengrig.util.annotation.unmodifiablewrapper.invalid;
 
-import dev.alexengrig.util.annotation.UnmodifiableWrapper;
+class WithNestedDomainTest extends NoWrapperClassTest {
 
-public class WithNestedDomain {
-
-    @UnmodifiableWrapper
-    public class NestedDomain {
-
-        private int integer;
-
+    @Override
+    Class<?> getDomainClass() {
+        return WithNestedDomain.NestedDomain.class;
     }
 
 }

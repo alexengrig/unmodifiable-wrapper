@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package dev.alexengrig.util.annotation.unmodifiablewrapper;
+package dev.alexengrig.util.annotation.unmodifiablewrapper.invalid;
 
 import dev.alexengrig.util.annotation.UnmodifiableWrapper;
 
