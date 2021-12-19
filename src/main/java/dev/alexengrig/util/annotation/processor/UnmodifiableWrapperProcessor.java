@@ -23,6 +23,8 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
 import javax.lang.model.element.TypeElement;
@@ -68,14 +70,21 @@ public final class UnmodifiableWrapperProcessor extends AbstractProcessor {
         if (type.getModifiers().contains(Modifier.FINAL)) {
             warning("Cannot inherit from final class.", type);
             return false;
+        } else if (type.getEnclosedElements().stream()
+                .filter(e -> e.getKind() == ElementKind.CONSTRUCTOR)
+                .map(ExecutableElement.class::cast)
+                .noneMatch(c -> !c.getModifiers().contains(Modifier.PRIVATE) && c.getParameters().size() == 0)) {
+            warning("Cannot inherit from class without not-private no-argument constructor.", type);
+            return false;
         } else if (type.getModifiers().contains(Modifier.ABSTRACT)) {
             warning("Cannot work with abstract class.", type);
             return false;
         } else if (type.getNestingKind() != NestingKind.TOP_LEVEL) {
             warning("Cannot work with not top-level class.", type);
             return false;
+        } else {
+            return true;
         }
-        return true;
     }
 
     private void process(TypeElement type) {
