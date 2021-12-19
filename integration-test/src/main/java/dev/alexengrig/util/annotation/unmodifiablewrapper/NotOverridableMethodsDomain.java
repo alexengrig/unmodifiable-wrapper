@@ -31,14 +31,6 @@ public class NotOverridableMethodsDomain {
         // do nothing
     }
 
-    public int getInteger() {
-        return integer;
-    }
-
-    public void setInteger(int integer) {
-        this.integer = integer;
-    }
-
     private int getPrivateInteger() {
         return integer;
     }
