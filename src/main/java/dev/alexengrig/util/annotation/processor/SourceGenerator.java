@@ -14,14 +14,11 @@
  * limitations under the License.
  */
 
-package dev.alexengrig.util.annotation;
+package dev.alexengrig.util.annotation.processor;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+@FunctionalInterface
+interface SourceGenerator {
 
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.SOURCE)
-public @interface UnmodifiableWrapper {
+    String generate(Context context);
+
 }

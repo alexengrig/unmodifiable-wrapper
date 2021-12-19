@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package dev.alexengrig.util.annotation;
+package dev.alexengrig.util.annotation.unmodifiablewrapper.invalid;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+class WithNestedDomainTest extends NoWrapperClassTest {
 
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.SOURCE)
-public @interface UnmodifiableWrapper {
+    @Override
+    Class<?> getDomainClass() {
+        return WithNestedDomain.NestedDomain.class;
+    }
+
 }

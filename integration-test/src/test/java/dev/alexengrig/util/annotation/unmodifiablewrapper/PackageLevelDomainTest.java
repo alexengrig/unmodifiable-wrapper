@@ -14,14 +14,21 @@
  * limitations under the License.
  */
 
-package dev.alexengrig.util.annotation;
+package dev.alexengrig.util.annotation.unmodifiablewrapper;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.junit.jupiter.api.Test;
 
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.SOURCE)
-public @interface UnmodifiableWrapper {
+import java.lang.reflect.Modifier;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+class PackageLevelDomainTest {
+
+    @Test
+    void testAccessModifier() {
+        PackageLevelDomain domain = new PackageLevelDomain();
+        new UnmodifiablePackageLevelDomain(domain);
+        assertFalse(Modifier.isPublic(UnmodifiablePackageLevelDomain.class.getModifiers()));
+    }
+
 }

@@ -14,14 +14,32 @@
  * limitations under the License.
  */
 
-package dev.alexengrig.util.annotation;
+package dev.alexengrig.util.annotation.processor;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.lang.model.element.TypeElement;
+import java.util.Optional;
+import java.util.Set;
 
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.SOURCE)
-public @interface UnmodifiableWrapper {
+interface Context {
+
+    TypeElement getType();
+
+    Optional<String> getPackageName();
+
+    boolean isWrapperClassPublic();
+
+    String getDomainSimpleClassName();
+
+    String getWrapperSimpleClassName();
+
+    String getDomainClassName();
+
+    String getWrapperClassName();
+
+    Set<MyMethod> getAllOverridableMethods();
+
+    Set<MyMethod> getOtherMethods();
+
+    Set<MyMethod> getModificationMethods();
+
 }

@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package dev.alexengrig.util.annotation;
+package dev.alexengrig.util.annotation.processor;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.lang.model.element.TypeElement;
 
-@Target({ElementType.TYPE})
-@Retention(RetentionPolicy.SOURCE)
-public @interface UnmodifiableWrapper {
+class MyContextFactory implements ContextFactory {
+
+    @Override
+    public Context createContext(ProcessingEnvironment environment, TypeElement type) {
+        MyContextHelper helper = new MyContextHelper(environment);
+        return new MyContext(helper, type);
+    }
+
 }
